@@ -12,7 +12,7 @@ $ch = curl_init($url);
 
 // Genera el valor de autorización
 $date = gmdate('D, d M Y H:i:s T');
-$version = '2022-05-01';
+$version = '2021-05-01';
 $headers = "x-ms-date:$date\nx-ms-version:$version";
 $signatureString = "GET\n\n\n\n\n\n\n\n\n\n\n\n\n$headers\n/$accountName/filesharetestapi/hola.txt";
 $signature = base64_encode(hash_hmac('sha256', $signatureString, base64_decode($accountKey), true));
