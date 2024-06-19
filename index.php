@@ -1,6 +1,6 @@
 <?php
 // Ruta al archivo en Azure Files
-$archivo = '\\filestestapi.file.core.windows.net/filesharetestapi\hola.txt';
+$archivo = 'https://filestestapi.file.core.windows.net/filesharetestapi/dirapifiles/hola.txt';
 
 // Verifica si el archivo existe
 if (file_exists($archivo)) {
