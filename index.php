@@ -1,15 +1,24 @@
 <?php
-// URL del archivo en Azure Files
-$urlArchivoAzure = "https://filestestapi.file.core.windows.net/filesharetestapi/dirapifiles/hola.txt";
+// Ruta al archivo en Azure Files
+$archivo = '\\filestestapi.file.core.windows.net/filesharetestapi\hola.txt';
 
-// Utiliza file_get_contents para obtener el contenido del archivo
-$contenido = file_get_contents($urlArchivoAzure);
+// Verifica si el archivo existe
+if (file_exists($archivo)) {
+    // Abre el archivo en modo de lectura
+    $fp = fopen($archivo, "r");
 
-// Verifica si se obtuvo algún contenido
-if ($contenido !== false) {
-    // Muestra el contenido en la página web
-    echo nl2br($contenido);
+    // Lee y muestra el contenido del archivo
+    if ($fp) {
+        while (($linea = fgets($fp)) !== false) {
+            echo htmlspecialchars($linea) . "<br>";
+        }
+
+        // Cierra el archivo
+        fclose($fp);
+    } else {
+        echo "Error al abrir el archivo.";
+    }
 } else {
-    echo "No se pudo leer el archivo de Azure Files.";
+    echo "El archivo no existe.";
 }
 ?>
