@@ -7,8 +7,11 @@ use MicrosoftAzure\Storage\Common\Internal\Authentication\TokenAuthScheme;
 $token = getenv('IDENTITY_ENDPOINT');
 $tokenAuthScheme = new TokenAuthScheme($token);
 
-// Crear el cliente de FileRestProxy con la autenticación de token
-$fileClient = FileRestProxy::createFileService(null, $tokenAuthScheme);
+// Endpoint del servicio de archivos de Azure
+$endpoint = 'https://filestestapo.file.core.windows.net/';
+
+// Crear el cliente de FileRestProxy con la autenticación de token y el endpoint
+$fileClient = FileRestProxy::createFileService($endpoint, $tokenAuthScheme);
 
 // Nombre del share y del directorio donde se encuentra el fichero
 $shareName = 'filesharetestapi';
