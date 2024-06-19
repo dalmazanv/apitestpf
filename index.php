@@ -1,4 +1,8 @@
 <?php
+curl_setopt($ch, CURLOPT_VERBOSE, true);
+$verbose = fopen('php://temp', 'w+');
+curl_setopt($ch, CURLOPT_STDERR, $verbose);
+
 // Nombre de la cuenta de Azure Storage
 $accountName = 'filestestapi';
 // Clave de la cuenta de Azure Storage (en base64)
@@ -49,4 +53,11 @@ if(curl_errno($ch)) {
 
 // Cierra la sesión cURL
 curl_close($ch);
+
+rewind($verbose);
+$verboseLog = stream_get_contents($verbose);
+fclose($verbose);
+
+echo "cURL log:\n" . htmlspecialchars($verboseLog) . "\n";
+
 ?>
