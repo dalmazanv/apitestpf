@@ -1,6 +1,6 @@
 <?php
 // URL del archivo en Azure Files
-$url = 'https://filestestapi.file.core.windows.net/filesharetestapi/hola.txt';
+$url = '//filestestapi.file.core.windows.net/filesharetestapi/hola.txt';
 
 // Inicializa cURL
 $ch = curl_init($url);
