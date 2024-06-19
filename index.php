@@ -1,30 +1,28 @@
 <?php
-require 'vendor/autoload.php';
+// URL del archivo en Azure Files
+$url = 'https://filestestapi.file.core.windows.net/filesharetestapi/hola.txt';
 
-use MicrosoftAzure\Storage\File\FileRestProxy;
-use MicrosoftAzure\Storage\Common\Exceptions\ServiceException;
+// Inicializa cURL
+$ch = curl_init($url);
 
-$accountName = 'filestestapi';
-$accountKey = 'YQncsNA6UrxbjruMaUvfVHXrvwbWkbT7Pv73/+csgUgqdkOrcLCT0RbPLRTAlWku5SUJej9Rib8P+ASt23rOdg';
-$shareName = 'filesharetestapi';
-$filePath = 'dirapifiles/hola.txt'; // Ruta del archivo dentro del recurso compartido
+// Configura las opciones de cURL para obtener el contenido del archivo
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HEADER, false);
 
-// Crear el cliente de Azure File
-$connectionString = "DefaultEndpointsProtocol=https;AccountName=$accountName;AccountKey=$accountKey";
-$fileClient = FileRestProxy::createFileService($connectionString);
+// Añade el encabezado x-ms-version
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('x-ms-version: 2022-05-01'));
 
-try {
-    // Obtener el contenido del archivo
-    $fileContent = $fileClient->getFile($shareName, '', $filePath);
-    $stream = $fileContent->getContentStream();
-    $contents = stream_get_contents($stream);
+// Ejecuta la solicitud cURL
+$contenido = curl_exec($ch);
 
-    // Mostrar el contenido del archivo en la página web
-    echo nl2br(htmlspecialchars($contents, ENT_QUOTES, 'UTF-8'));
-} catch (ServiceException $e) {
-    // Manejar errores
-    $code = $e->getCode();
-    $error_message = $e->getMessage();
-    echo "Error al obtener el archivo: $code - $error_message";
+// Verifica si hubo un error
+if(curl_errno($ch)) {
+    echo 'Error de cURL: ' . curl_error($ch);
+} else {
+    // Muestra el contenido del archivo
+    echo htmlspecialchars($contenido);
 }
+
+// Cierra la sesión cURL
+curl_close($ch);
 ?>
