@@ -1,24 +1,25 @@
 <?php
-// Ruta al archivo en Azure Files
-$archivo = '//filestestapi.file.core.windows.net/filesharetestapi/hola.txt';
+// URL del archivo en Azure Files
+$url = 'https://filestestapi.file.core.windows.net/filesharetestapi/hola.txt';
 
-// Verifica si el archivo existe
-if (file_exists($archivo)) {
-    // Abre el archivo en modo de lectura
-    $fp = fopen($archivo, "r");
+// Inicializa cURL
+$ch = curl_init($url);
 
-    // Lee y muestra el contenido del archivo
-    if ($fp) {
-        while (($linea = fgets($fp)) !== false) {
-            echo htmlspecialchars($linea) . "<br>";
-        }
+// Configura las opciones de cURL para obtener el contenido del archivo
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HEADER, false);
 
-        // Cierra el archivo
-        fclose($fp);
-    } else {
-        echo "Error al abrir el archivo.";
-    }
+// Ejecuta la solicitud cURL
+$contenido = curl_exec($ch);
+
+// Verifica si hubo un error
+if(curl_errno($ch)) {
+    echo 'Error de cURL: ' . curl_error($ch);
 } else {
-    echo "El archivo no existe.";
+    // Muestra el contenido del archivo
+    echo htmlspecialchars($contenido);
 }
+
+// Cierra la sesión cURL
+curl_close($ch);
 ?>
