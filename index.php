@@ -9,6 +9,9 @@ $ch = curl_init($url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HEADER, false);
 
+// Añade el encabezado x-ms-version
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('x-ms-version: 2023-11-03'));
+
 // Ejecuta la solicitud cURL
 $contenido = curl_exec($ch);
 
