@@ -1,28 +1,21 @@
 <?php
-// URL del archivo en Azure Files
-$url = 'https://filestestapi.file.core.windows.net/filesharetestapi/hola.txt';
+// Utilizar el SDK de Azure para PHP con autenticación de identidad gestionada
+use MicrosoftAzure\Storage\File\FileRestProxy;
+use MicrosoftAzure\Storage\Common\Internal\Authentication\TokenAuthScheme;
 
-// Inicializa cURL
-$ch = curl_init($url);
+// Obtener el token de acceso desde el entorno de Azure App Service
+$token = getenv('IDENTITY_ENDPOINT');
+$tokenAuthScheme = new TokenAuthScheme($token);
 
-// Configura las opciones de cURL para obtener el contenido del archivo
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_HEADER, false);
+// Crear el cliente de FileRestProxy con la autenticación de token
+$fileClient = FileRestProxy::createFileService(null, $tokenAuthScheme);
 
-// Añade el encabezado x-ms-version
-curl_setopt($ch, CURLOPT_HTTPHEADER, array('x-ms-version: 2021-06-08'));
+// Nombre del share y del directorio donde se encuentra el fichero
+$shareName = 'filesharetestapi';
+$directoryName = 'dirapifiles'; // Puede ser una cadena vacía si el fichero está en la raíz del share
+$fileName = 'hola.txt';
 
-// Ejecuta la solicitud cURL
-$contenido = curl_exec($ch);
-
-// Verifica si hubo un error
-if(curl_errno($ch)) {
-    echo 'Error de cURL: ' . curl_error($ch);
-} else {
-    // Muestra el contenido del archivo
-    echo htmlspecialchars($contenido);
-}
-
-// Cierra la sesión cURL
-curl_close($ch);
+// Obtener el contenido del fichero
+$content = $fileClient->getFileContent($shareName, $directoryName, $fileName);
+echo $content;
 ?>
