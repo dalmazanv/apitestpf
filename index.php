@@ -1,21 +1,15 @@
 <?php
-// Nombre del archivo que deseas leer
-$nombreArchivo = "hola.txt";
+// URL del archivo en Azure Files
+$urlArchivoAzure = "https://filestestapi.file.core.windows.net/filesharetestapi/dirapifiles/hola.txt";
 
-// Verifica si el archivo existe y es legible
-if (file_exists($nombreArchivo) && is_readable($nombreArchivo)) {
-    // Abre el archivo en modo de lectura
-    $archivo = fopen($nombreArchivo, "r");
+// Utiliza file_get_contents para obtener el contenido del archivo
+$contenido = file_get_contents($urlArchivoAzure);
 
-    // Lee el contenido del archivo hasta el final
-    $contenido = fread($archivo, filesize($nombreArchivo));
-
-    // Cierra el archivo
-    fclose($archivo);
-
+// Verifica si se obtuvo algún contenido
+if ($contenido !== false) {
     // Muestra el contenido en la página web
     echo nl2br($contenido);
 } else {
-    echo "El archivo no existe o no se puede leer.";
+    echo "No se pudo leer el archivo de Azure Files.";
 }
 ?>
